@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Story-to-Shorts Studio — Kontenlaris Studio</title>
+<meta name="description" content="One topic in, a complete 45–60 second Shorts production pack out: hook-first script, scene list, overlays, title and hashtags — ready for the Talking-Head pipeline.">
+<style>
+:root{--navy:#0a1931;--navy2:#12294d;--orange:#ff7a00;--ink:#14213d;--mut:#5a6b84;--line:#e3e9f2;--bg:#f6f8fb}
+*{box-sizing:border-box}body{margin:0;font:16px/1.6 system-ui,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:50px 20px 38px;text-align:center}
+.mark{width:56px;height:56px;border-radius:14px;background:var(--orange);color:var(--navy);font-weight:900;font-size:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+h1{margin:0 0 8px;font-size:30px}header p{color:#b9c7dd;max-width:640px;margin:0 auto}
+.wrap{max-width:900px;margin:0 auto;padding:24px 20px 60px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:18px}
+input,textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:15px inherit;margin:4px 0 10px}
+textarea{min-height:110px}
+.btn{background:var(--orange);color:#fff;border:0;font-weight:800;padding:11px 22px;border-radius:999px;cursor:pointer}
+pre{background:var(--navy);color:#dbe6f5;border-radius:10px;padding:14px;overflow:auto;font-size:13px;white-space:pre-wrap;max-height:480px}
+.chain{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.chain span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13.5px}
+footer{background:var(--navy);color:#b9c7dd;text-align:center;padding:22px;font-size:14px}footer a{color:#ffb066}
+</style></head><body>
+<header><div class="mark">KL</div><h1>One topic in. A filmable Short out.</h1>
+<p>The blank page is the real bottleneck for faceless creators. This studio assembles a complete production pack in the framework that holds attention: hook in 3 seconds, one idea per sentence, a turn in the middle, a close that earns comments.</p>
+<div class="chain"><span>🔍 Trend Scout finds the topic</span><span>→</span><span>🎬 Story-to-Shorts writes it</span><span>→</span><span>🎙️ Talking-Head Kit films it</span><span>→</span><span>✂️ ClipSmith cuts it</span></div></header>
+<div class="wrap">
+<div class="card"><h2 style="margin-top:0">Build your pack (free, in-browser)</h2>
+<label>Topic</label><input id="topic" placeholder="e.g. Why products get views but no sales">
+<label>Angle</label><select id="angle"><option value="mistake">The costly mistake</option><option value="history">How it began</option><option value="myth">Myth vs fact</option><option value="numbers">By the numbers</option><option value="story">The story</option></select>
+<label>Your facts — one per line (the studio structures them; you supply the truth)</label>
+<textarea id="facts" placeholder="One verifiable fact per line, in the order you want them told…"></textarea>
+<button class="btn" id="go">Assemble pack</button>
+<pre id="out" style="display:none"></pre></div>
+<div class="card"><h3 style="margin-top:0">The framework (why it works)</h3>
+<p style="color:var(--mut)">**Hook ≤ 3s** — a question, a number or a conflict, never a greeting. **One idea per sentence** — captions and attention both break on long sentences. **The turn** at the midpoint re-opens curiosity exactly when swipe-away peaks. **The close** asks a question the viewer can answer in five words. Scripts land at 110–150 words: 45–60 seconds spoken.</p>
+<p style="color:var(--mut)">The downloadable core (<a href="https://github.com/kontenlaris-studio/story-to-shorts">GitHub</a>) does the same assembly offline and writes <code>script.txt</code> in the exact format the Talking-Head pipeline renders.</p></div>
+</div>
+<footer>Kontenlaris Studio · <a href="https://github.com/kontenlaris-studio">GitHub</a> · <a href="https://t.me/KontenlarisBuilds">Build log</a></footer>
+<script>
+const HOOKS={mistake:t=>`Stop. You're making the one mistake that kills ${t.charAt(0).toLowerCase()+t.slice(1)} — and it's not what you think.`,history:t=>`In the beginning, ${t} was completely different. Then one change rewrote everything.`,myth:t=>`Everything you believe about ${t} is wrong. Here is the proof.`,numbers:t=>`The numbers behind ${t} make no sense — until you see this one.`,story:t=>`This is the story of ${t} — and it does not end the way you expect.`};
+document.getElementById('go').onclick=()=>{
+  const topic=document.getElementById('topic').value.trim()||'your topic';
+  const facts=document.getElementById('facts').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  if(!facts.length){alert('Add at least one fact line.');return}
+  const hook=HOOKS[document.getElementById('angle').value](topic);
+  const mid=Math.max(1,Math.floor(facts.length/2));
+  const s=[hook,...facts.slice(0,mid),'But here is where it gets interesting.',...facts.slice(mid),'Agree or not? Tell me in the comments — and follow for part two.'];
+  const script=s.join(' ');const words=script.split(/\s+/).length;const secs=Math.round(words/150*60);
+  let t=0;const scenes=s.map(x=>{const d=(x.split(/\s+/).length/150*60);const r=`[${t.toFixed(1)}s–${(t+d).toFixed(1)}s] ${x===hook?'HOOK':x.startsWith('But here')?'TURN':x.startsWith('Agree')?'CLOSE':'B-roll'} — ${x}`;t+=d;return r}).join('\n');
+  const out=document.getElementById('out');out.style.display='block';
+  out.textContent=`SCRIPT (~${words} words, ~${secs}s) — feed to the Talking-Head pipeline:\n\n${script}\n\nSCENES:\n${scenes}\n\nTITLE: ${topic} — the part nobody tells you\nTAGS: #shorts #storytime`;
+};
+</script>
+</body></html>
